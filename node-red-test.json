@@ -1,0 +1,91 @@
+[
+  {
+    "id": "a3b3d175.dfd2b",
+    "type": "tab",
+    "label": "node red load test"
+  },
+  {
+    "id": "dfcc91d9.794de",
+    "type": "mqtt-broker",
+    "z": "",
+    "broker": "localhost",
+    "port": "1883",
+    "clientid": "",
+    "usetls": false,
+    "compatmode": true,
+    "keepalive": "60",
+    "cleansession": true,
+    "willTopic": "",
+    "willQos": "0",
+    "willPayload": "",
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthPayload": ""
+  },
+  {
+    "id": "d6c15583.d9c438",
+    "type": "postgresdb",
+    "z": "",
+    "hostname": "localhost",
+    "port": "5432",
+    "db": "noderedtest",
+    "ssl": false
+  },
+  {
+    "id": "bc908e87.64b2e",
+    "type": "mqtt in",
+    "z": "a3b3d175.dfd2b",
+    "name": "",
+    "topic": "topic",
+    "qos": "2",
+    "broker": "dfcc91d9.794de",
+    "x": 79.5,
+    "y": 1067,
+    "wires": [
+      [
+        "2c411704.d7bee8"
+      ]
+    ]
+  },
+  {
+    "id": "67efb62b.797398",
+    "type": "function",
+    "z": "a3b3d175.dfd2b",
+    "name": "insert",
+    "func": "var triggered = msg.payload.level > 100;\nvar msgtext = \"device \" + String(msg.payload.id) + (triggered ? \" triggered\" : \" not triggered\");\n\nvar querystring = \"INSERT INTO processed_data (measureDateTime, location, deviceID, level, trigger, msgtext) VALUES (to_timestamp(\" + String(msg.payload.time/1000) + \"),\" + \"ST_GeomFromText('POINT(\" + String( msg.payload.location.lon ) + \" \" + String(msg.payload.location.lat) + \")',4326),\" + String(msg.payload.id) + \",\" + String(msg.payload.level) + \",\"+  String(triggered) + \",'\" + msgtext + \"');\";\n\nreturn {payload: querystring};",
+    "outputs": 1,
+    "noerr": 0,
+    "x": 355.5,
+    "y": 1067,
+    "wires": [
+      [
+        "6c2df6d8.1acfe8"
+      ]
+    ]
+  },
+  {
+    "id": "2c411704.d7bee8",
+    "type": "json",
+    "z": "a3b3d175.dfd2b",
+    "name": "",
+    "x": 217.5,
+    "y": 1067,
+    "wires": [
+      [
+        "67efb62b.797398"
+      ]
+    ]
+  },
+  {
+    "id": "6c2df6d8.1acfe8",
+    "type": "postgres",
+    "z": "a3b3d175.dfd2b",
+    "postgresdb": "d6c15583.d9c438",
+    "name": "localhost",
+    "output": false,
+    "outputs": 0,
+    "x": 495.5,
+    "y": 1067,
+    "wires": []
+  }
+]
