@@ -19,9 +19,7 @@ var postgres_insert_2 = function(msg) {
 
 var postgres_insert_3 = function(msg) {
 
-  var querystring = "INSERT INTO raw_json_data (data) VALUES ("+ JSON.stringify(msg) + ");";
-
-  console.log("Insert 3 time: " + String(t1-t0));
+  var querystring = "INSERT INTO raw_json_data (data) VALUES ('"+ JSON.stringify(msg.payload) + "');";
 
   return {payload: querystring};
 

@@ -18,7 +18,7 @@ var generate_message = function(id) {
 
 
 client.on('connect', function () {
-  var number = 50000;
+  var number = 5000;
   console.log(Date.now());
   for (var i = 0; i < number; i++) {
       client.publish('topic/'+process.argv[2],JSON.stringify(generate_message(i)));
